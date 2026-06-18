@@ -1,6 +1,9 @@
 
 
+
 name: NSE Daily Update
+permissions:
+  contents: write
 
 on:
   schedule:
@@ -31,8 +34,8 @@ jobs:
 
       - name: Commit updated files
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/
           git commit -m "daily market update" || echo "No changes"
-          git push
+          git push origin main
