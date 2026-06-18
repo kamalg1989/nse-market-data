@@ -1,0 +1,38 @@
+
+
+name: NSE Daily Update
+
+on:
+  schedule:
+    # 6:00 PM IST = 12:30 UTC
+    - cron: '30 12 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  update-market-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run daily update
+        run: |
+          python update_daily.py
+
+      - name: Commit updated files
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add data/
+          git commit -m "daily market update" || echo "No changes"
+          git push
